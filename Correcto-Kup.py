@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import xml.etree.ElementTree as ET
 import os
-import language_tool_python
+from autocorrect import Speller
 
 class CorrectorApp(tk.Tk):
     def __init__(self):
@@ -17,6 +17,7 @@ class CorrectorApp(tk.Tk):
         self.select_button.pack(pady=10)
 
         self.file_path = ""
+        self.speller = Speller(lang='fr')  # Initialiser l'outil d'autocorrection pour le français
 
     def select_file(self):
         self.file_path = filedialog.askopenfilename(
@@ -28,9 +29,7 @@ class CorrectorApp(tk.Tk):
             self.correct_button.pack(pady=10)
 
     def correct_french(self, text):
-        tool = language_tool_python.LanguageTool('fr')
-        matches = tool.check(text)
-        corrected_text = language_tool_python.utils.correct(text, matches)
+        corrected_text = self.speller(text)
         return corrected_text
 
     def correct_xml_element(self, element):
